@@ -81,11 +81,6 @@ const updateStatusContact = async (req, res) => {
     res.json(result);
 };
 
-// const filterFavorite = async (req, res) => {
-//     const { favorite } = req.qwery;
-//     console.log(favorite);
-// }
-
 module.exports = {
     getAll: controllerWrapper(getAll),
     getById: controllerWrapper(getById),

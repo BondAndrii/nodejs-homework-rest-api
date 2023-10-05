@@ -75,15 +75,30 @@ const logouter = async (req, res) => {
     const { _id } = req.body;
     await User.findByIdAndUpdate(_id, { token: "" });
 
-    res.status(204);
-    //     .json({
-    //     message: "Logout success"
-    // })
+    res.status(204)
+        .json({
+        message: "Logout success"
+    })
+}
+
+const changeSubscription = async (req, res) => {
+    const user = req.user;
+    const { subscription } = req.body;
+    
+    if (subscription !== 'starter' && subscription !== 'pro' && subscription !== 'business') {
+        throw HttpError(400, "Please, enter one of variants: 'starter', 'pro', 'business' ")
+    }
+    await User.findByIdAndUpdate({_id: user._id}, {subscription: subscription}, {new: true});
+    
+    res.status(200).json({
+        message: "Subscription successfuly updated"
+    });
 }
 
 module.exports = {
     register: controllerWrapper(register),
     loginer: controllerWrapper(loginer),
     getCurrent: controllerWrapper(getCurrent),
-    logouter: controllerWrapper(logouter)
+    logouter: controllerWrapper(logouter),
+    changeSubscription: controllerWrapper(changeSubscription),
 }
