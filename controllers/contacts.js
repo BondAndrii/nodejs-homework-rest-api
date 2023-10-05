@@ -5,9 +5,9 @@ const { HttpError, controllerWrapper } = require("../helpers");
 const getAll = async (req, res) => {
 
     const { _id: owner } = req.user;
-    const { page = 1, limit = 20 } = req.query;
+    const { page, limit, favorite } = req.query;
     const skip = (page - 1) * limit;
-    const result = await Contact.find({owner}, "-createdAt -updatedAt -__v", {skip, limit});
+    const result = await Contact.find({owner, favorite}, "-createdAt -updatedAt -__v", {skip, limit}).populate("owner", "email");
     
     res.json(result);
 };
@@ -72,11 +72,17 @@ const updateStatusContact = async (req, res) => {
     res.json(result);
 };
 
+// const filterFavorite = async (req, res) => {
+//     const { favorite } = req.qwery;
+//     console.log(favorite);
+// }
+
 module.exports = {
     getAll: controllerWrapper(getAll),
     getById: controllerWrapper(getById),
     addContact: controllerWrapper(addContact),
     deleteContact: controllerWrapper(deleteContact),
     updateContact: controllerWrapper(updateContact),
-    updateStatusContact: controllerWrapper(updateStatusContact)
+    updateStatusContact: controllerWrapper(updateStatusContact),
+    // filterFavorite: controllerWrapper(filterFavorite),
 }
