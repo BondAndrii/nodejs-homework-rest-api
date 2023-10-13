@@ -2,11 +2,23 @@ const {Contact} = require("../models/contact")
 
 const { HttpError, controllerWrapper } = require("../helpers");
 
-const getAll = async (_, res) => {
+const getAll = async (req, res) => {
 
-    const result = await Contact.find({}, "-createdAt -updatedAt -__v");
-
+    const { _id: owner } = req.user;
+    const { page, limit, favorite } = req.query;
+    // const filterFavorite = favorite === true ? favorite : null;
+    const skip = (page - 1) * limit;
+    if (favorite) {
+        const result = await Contact.find({ owner, favorite}, "-createdAt -updatedAt -__v", { skip, limit })
+            .populate("owner", "email");
+        res.json(result);
+    } else {
+            const result = await Contact.find({ owner}, "-createdAt -updatedAt -__v", { skip, limit })
+        .populate( "owner", "email");
+    
     res.json(result);
+    }
+
 };
 
 const getById = async (req, res) => {
@@ -23,9 +35,9 @@ const getById = async (req, res) => {
 };
 
 const addContact = async (req, res) => {
-
+    const { _id: owner } = req.user;
     const data = req.body;
-    const result = await Contact.create(data);
+    const result = await Contact.create({...data, owner});
 
     res.status(201).json(result);
 };
@@ -75,5 +87,6 @@ module.exports = {
     addContact: controllerWrapper(addContact),
     deleteContact: controllerWrapper(deleteContact),
     updateContact: controllerWrapper(updateContact),
-    updateStatusContact: controllerWrapper(updateStatusContact)
+    updateStatusContact: controllerWrapper(updateStatusContact),
+    // filterFavorite: controllerWrapper(filterFavorite),
 }
