@@ -3,6 +3,7 @@ const logger = require('morgan');
 const cors = require('cors');
 const mongoose = require('mongoose');
 
+const DB_HOST = "mongodb+srv://Andrii:Fa86SWZR1xKxqh5U@cluster0.endazjf.mongodb.net/db-contacts"
 require('dotenv').config();
 mongoose.connect(DB_HOST)
   .then(() => console.log("Database connection successful"))
