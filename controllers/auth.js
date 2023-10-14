@@ -8,7 +8,7 @@ const { SECRET_KEY } = process.env;
 
 const { User } = require('../models/user');
 
-const { HttpError, controllerWrapper } = require("../helpers");
+const { HttpError, controllerWrapper, resizeAvatar } = require("../helpers");
 
 const avatarsDir = path.join(__dirname, "../", "public", "avatars");
 
@@ -105,10 +105,12 @@ const changeAvatar = async (req, res) => {
     const { path: tempUpload, originalname } = req.file;
 
     const filename = `${_id}_${originalname}`;
-
+    
     const resultUpload = path.join(avatarsDir, filename);
 
     await fs.rename(tempUpload, resultUpload);
+
+    resizeAvatar(resultUpload);
     
     const avatarURL = path.join("avatars", filename);
 
