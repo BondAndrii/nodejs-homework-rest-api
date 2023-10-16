@@ -6,9 +6,12 @@ const handleMongooseError = require("./handleMongooseError");
 
 const resizeAvatar = require("./resizeAvatar");
 
+const sendEmail = require("./sendEmail");
+
 module.exports = {
     HttpError,
     controllerWrapper,
     handleMongooseError,
-    resizeAvatar
+    resizeAvatar,
+    sendEmail
 }
